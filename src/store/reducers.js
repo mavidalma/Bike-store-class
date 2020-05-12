@@ -6,58 +6,54 @@ const initialState = {
     filter: BIKE_FILTERS.ALL,
     cart: []
 };
-/*
+
 const updateItems = (items, itemId, update) => {
     return items.map(item => {
-        if(itemId === )
-        return {
-            ...item,
-            ...update(item)
-        };
-    })
-}*/
+        if(item.id === itemId ) {
+            return {
+                ...item,
+                ...update(item)
+            };
+        }
+        return item;
+    });
+}
 
-export default function (state = initialState, action) {
-    switch(action.type) {
+export function bikeReducer (state = initialState.bikes, action) {
+    switch (action.type) {
         case TYPES.SET_BIKES:
-            return{
+            return {
                 ...state,
                 bikes: action.bikes
             };
-            break;
-        case TYPES.SET_FILTER:
-            return{
-                ...state,
-                bikes: action.filter
-                };
-                break;
-            case TYPES.CHECKOUT_CART:
-                return{
-                    ...state,
-                    cart: initialState.cart,
-                }
-            case TYPES.ADD_TO_CART:
-                return {
-                    ...state,
-                    bikes: state.bikes.map(bike => {
-                        if(bike.id === action.bikeId) {
-                         return {
-                           ...bike,
-                            stock: bike.stock -1;
-                        }
-                    }}),
-                    cart: [...state.cart, action.bikeID]
-                };
-            case TYPES.REMOVE_FROM_CART:
-                return {
-                    ...state,
-                    bikes: []
-                    cart: state.cart.filter(bike => bike !== action.bikeId)
-                    }
+        case TYPES.ADD_TO_CART:
+            return updateItems(state, action.bikeId, item => ({stock: item.stock -1}));
+        case TYPES.REMOVE_FROM_CART:
+            return updateItems(state, action.bikeId, item => ({stock: item.stock +1}));
         default:
-            return {
-                ...state
-            }       
+            return state;
     }
-    return state;
+}
+
+export function cartReducer (state = initialState.cart, action) {
+    switch (action.type) {
+        case TYPES.ADD_TO_CART:
+            return [...state, action.bikeId];
+        case TYPES.REMOVE_FROM_CART:
+            return state.filter(bike => bike !== action.bikeId);
+        case TYPES.CHECKOUT_CART:
+            return initialState;
+        default:
+            return initialState.cart;
+    }
+}
+
+export function filterReducer (state = initialState.filter, action) {
+    switch (action.type) {
+        case TYPES.SET_FILTER:
+            return action.filter;
+                
+        default:
+            return state;
+    }
 }

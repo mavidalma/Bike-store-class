@@ -18,5 +18,8 @@ export const removeFromCart = bikeId => ({
     type: TYPES.REMOVE_FROM_CART,
     bikeId
 });
+export const checkoutCart = () => ({
+    type: CHECKOUT_CART,
+});
 
 
